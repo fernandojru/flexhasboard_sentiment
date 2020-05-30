@@ -7,6 +7,10 @@ This repository has several dimensions:
 
 ![](https://github.com/fernandojru/flexhasboard_sentiment/blob/master/Storyboard.png)
 
+## Access the storyboard: 
+
+[Just click here](https://rpubs.com/fernandojru/same_marriage)
+
 **BONUS:** Code for shaped word clouds
 
 ![](https://github.com/fernandojru/flexhasboard_sentiment/blob/master/Word_cloud_unicorn_white.png)
