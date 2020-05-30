@@ -1,0 +1,137 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r, warning=FALSE, message=FALSE}
+library(shiny)
+library(shinythemes)
+library(colourpicker)
+library(wordcloud2)
+library(tm)
+library(dplyr)
+library(tidyverse)
+#devtools::install_github("lchiffon/wordcloud2")
+```
+
+```{r}
+create_wordcloud<-function(data, num_words = 100, background = "white",language="english",
+                           empty_words=c("The","And"), Word_colors="random-dark", 
+                           Shape="circle"){
+  
+  # If text is provided, convert it to a dataframe of word frequencies
+  if (is.character(data)) {
+    corpus <- Corpus(VectorSource(data))
+    corpus <- tm_map(corpus, tolower)
+    corpus <- tm_map(corpus, removePunctuation)
+    corpus <- tm_map(corpus, removeNumbers)
+    corpus <- tm_map(corpus, removeWords, stopwords(language))
+    corpus <- tm_map(corpus, removeWords,tolower(empty_words))
+    tdm <- as.matrix(TermDocumentMatrix(corpus))
+    data <- sort(rowSums(tdm), decreasing = TRUE)
+    data <- data.frame(word = names(data), freq = as.numeric(data))
+  }
+  
+  # Make sure a proper num_words is provided
+  if (!is.numeric(num_words) || num_words < 3) {
+    num_words <- 3
+  }  
+  
+  # Grab the top n most common words
+  data <- head(data, n = num_words)
+  if (nrow(data) == 0) {
+    return(NULL)
+  }
+  
+  wordcloud2(data, backgroundColor = background, shape=Shape, color=Word_colors)
+}
+
+```
+
+```{r}
+clean_words<-function(data, num_words = 100,language="english",empty_words=c("The","And"))
+{
+  # If text is provided, convert it to a dataframe of word frequencies
+  if (is.character(data)) {
+    corpus <- Corpus(VectorSource(data))
+    corpus <- tm_map(corpus, tolower)
+    corpus <- tm_map(corpus, removePunctuation)
+    corpus <- tm_map(corpus, removeNumbers)
+    corpus <- tm_map(corpus, removeWords, stopwords(language))
+    corpus <- tm_map(corpus, removeWords,tolower(empty_words))
+    tdm <- as.matrix(TermDocumentMatrix(corpus))
+    data <- sort(rowSums(tdm), decreasing = TRUE)
+    data <- data.frame(word = names(data), freq = as.numeric(data))
+  }
+  
+  # Make sure a proper num_words is provided
+  if (!is.numeric(num_words) || num_words < 3) {
+    num_words <- 3
+  }  
+  
+  # Grab the top n most common words
+  data <- head(data, n = num_words)
+  if (nrow(data) == 0) {
+    return(NULL)
+  }
+  
+  return(data)
+}
+```
+
+```{r}
+Carlos<- readLines("Mensaje-Matrimonio-Igualitario-Carlos-Alvarado-Quesada.txt")
+```
+
+
+```{r}
+load("matrimonio_igualitario_26-midnight.RData")
+Tweets<-tweets %>% select(text)
+```
+
+
+```{r}
+Cleaned_tweets<-clean_words(Tweets$text,num_words = 500, language = "spanish",
+                            empty_words=c("matrimonioigualitario"))
+```
+
+```{r}
+colors=c(rgb(208/255,24/255,40/255),rgb(255/255,116/255,33/255),rgb(239/255,194/255,43/255),
+         rgb(0/255,127/255,38/255),rgb(0/255,69/255,126/255),rgb(148/255,45/255,194/255))
+ran<-sample(1:6,500,replace = TRUE)
+color_vector=colors[ran]
+
+
+wordcloud2(Cleaned_tweets, color =color_vector, fontFamily="Domine",figPath = "unicorn.png", backgroundColor = "black")
+```
+
+```{r}
+wordcloud2(Cleaned_tweets, color =color_vector, fontFamily="Domine",figPath = "twitter.png")
+```
+
+```{r}
+wordcloud2(Cleaned_tweets, color =color_vector, fontFamily="Domine",figPath = "dachshund.png")
+```
+
+```{r}
+wordcloud2(Cleaned_tweets, color =color_vector, fontFamily="Domine",figPath = "beagle.png")
+```
+
+```{r}
+letterCloud(Cleaned_tweets, word = "JOTA", color =color_vector, backgroundColor = "black")
+```
+
+```{r}
+Cleaned_carlos<-clean_words(Carlos,num_words = 500, language = "spanish")
+```
+
+```{r}
+colors=c(rgb(208/255,24/255,40/255),rgb(255/255,116/255,33/255),rgb(239/255,194/255,43/255),
+         rgb(0/255,127/255,38/255),rgb(0/255,69/255,126/255),rgb(148/255,45/255,194/255))
+ran<-sample(1:6,500,replace = TRUE)
+color_vector=colors[ran]
+
+
+wordcloud2(Cleaned_carlos, color =color_vector, figPath = "heart.png", fontFamily="Domine",backgroundColor = "black")
+```
+
