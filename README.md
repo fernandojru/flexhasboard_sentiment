@@ -6,3 +6,7 @@ This repository has several dimensions:
 * A visualization using stories, from flexdashboard
 
 ![](https://github.com/fernandojru/flexhasboard_sentiment/blob/master/Storyboard.png)
+
+**BONUS:** Code for shaped word clouds
+
+![](https://github.com/fernandojru/flexhasboard_sentiment/blob/master/Word_cloud_unicorn_white.png)
